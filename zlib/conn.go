@@ -167,6 +167,16 @@ func (c *Conn) BasicBanner() (string, error) {
 }
 
 func (c *Conn) Read(b []byte) (int, error) {
+
+       bufio.NewReader(c.getUnderlyingConn())
+       b, err := ioutil.ReadAll(c.getUnderlyingConn())
+       c.grabData.Read = string(b)
+
+       return 0, err
+}
+
+func (c *Conn) oldRead(b []byte) (int, error) {
+
 	n, err := c.getUnderlyingConn().Read(b)
 	c.grabData.Read = string(b[0:n])
 	return n, err
